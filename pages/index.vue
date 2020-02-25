@@ -30,10 +30,19 @@
 
 <script>
 import Logo from '~/components/Logo.vue'
+import Janus from '~/components/janus'
+
+
 
 export default {
   components: {
     Logo
+  },
+  mounted() {
+    console.log(Janus)
+    Janus.init({debug: "all", callback: function() {
+      	var janus = new Janus(null)
+    }})
   }
 }
 </script>

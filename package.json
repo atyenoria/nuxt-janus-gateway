@@ -11,7 +11,8 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "nuxt": "^2.0.0"
+    "nuxt": "^2.0.0",
+    "webrtc-adapter": "^7.5.0"
   },
   "devDependencies": {}
 }
