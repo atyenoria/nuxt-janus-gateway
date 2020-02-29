@@ -1,30 +1,11 @@
 <template>
   <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        nuxt-janus-gateway
-      </h1>
-      <h2 class="subtitle">
-        My remarkable Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
+    rendering
+    <video
+      id="video"
+      autoPlay
+      playsInline
+    />
   </div>
 </template>
 
@@ -39,9 +20,67 @@ export default {
     Logo
   },
   mounted() {
-    console.log(Janus)
+    const server = "your server"
+    const opaqueId = "streamingtest-"+Janus.randomString(12);
+    let streaming = null;
+
     Janus.init({debug: "all", callback: function() {
-      	var janus = new Janus(null)
+			let janus = new Janus(
+				{
+					server: server,
+					success: function() {
+						janus.attach(
+							{
+								plugin: "janus.plugin.streaming",
+								opaqueId: opaqueId,
+								success: function(pluginHandle) {
+                   const body = { "request": "watch", id: parseInt(1) };
+                   streaming = pluginHandle
+                   streaming.send({"message": body});
+								},
+								error: function(error) {
+									console.log("Error attaching plugin... " + error);
+								},
+								onmessage: function(msg, jsep) {
+									const result = msg["result"];
+									console.log(msg)
+									if(jsep !== undefined && jsep !== null) {
+										streaming.createAnswer(
+											{
+												jsep: jsep,
+												media: { audioSend: false, videoSend: false, data: true },
+												success: function(jsep) {
+													var body = { "request": "start" };
+													streaming.send({"message": body, "jsep": jsep});
+												},
+												error: function(error) {
+													console.log("WebRTC error... " + JSON.stringify(error));
+												}
+											});
+									}
+								},
+								onremotestream: function(stream) {
+									var addButtons = false;
+										addButtons = true
+											var videoTracks = stream.getVideoTracks();
+											if(videoTracks === null || videoTracks === undefined || videoTracks.length === 0)
+                        return;
+                        
+                  let video = document.getElementById('video')
+                  // video.srcObject = stream;// webinar or p2p
+                  // console.log("rendering", stream)
+                  Janus.attachMediaStream(video, stream);
+                  
+								}
+							});
+					},
+					error: function(error) {
+						bootbox.alert(error, function() {
+							window.location.reload();
+						});
+					}
+        });
+        
     }})
   }
 }
