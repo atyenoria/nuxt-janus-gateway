@@ -1,22 +1,9 @@
-# nuxt-janus-gateway
+# About This Repo
+Minimal Demo project for Nuxt.js + Janus Streaming Plugin Demo
 
-> My remarkable Nuxt.js project
+# Setup 
 
-## Build Setup
-
-``` bash
-# install dependencies
-$ yarn install
-
-# serve with hot reload at localhost:3000
-$ yarn dev
-
-# build for production and launch server
-$ yarn build
-$ yarn start
-
-# generate static project
-$ yarn generate
-```
-
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+npm install
+set the server for janus (index.vue)
+fill the streaming in the janus straming mount point
+yarn nuxt dev
